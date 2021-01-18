@@ -32,6 +32,9 @@ class VonMisesFisher(torch.distributions.Distribution):
     @property
     def stddev(self):
         return self.scale
+    @property
+    def dim(self):
+        return self.__m
 
     def __init__(self, loc, scale, validate_args=None, k=1):
         self.dtype = loc.dtype
@@ -210,4 +213,5 @@ def _kl_vmf_uniform(vmf, hyu):
     return -vmf.entropy() + hyu.entropy()
 @register_kl(VonMisesFisher, VonMisesFisher)
 def _kl_vmf_vmf(vmf1, vmf2):
-    return -vmf1.entropy() + vmf2.entropy()
+    rel_entropy = ((vmf2.dim*0.5) - 1)*torch.log(vmf2.scale) - (vmf2.dim*0.5)*math.log(2*math.pi) -  torch.log(ive(vmf2.dim / 2 - 1, vmf2.scale))
+    return -vmf1.entropy() - rel_entropy 
