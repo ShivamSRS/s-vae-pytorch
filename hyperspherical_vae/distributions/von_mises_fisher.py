@@ -214,4 +214,4 @@ def _kl_vmf_uniform(vmf, hyu):
 @register_kl(VonMisesFisher, VonMisesFisher)
 def _kl_vmf_vmf(vmf1, vmf2):
     rel_entropy = ((vmf2.dim*0.5) - 1)*torch.log(vmf2.scale) - (vmf2.dim*0.5)*math.log(2*math.pi) -  torch.log(ive(vmf2.dim / 2 - 1, vmf2.scale))
-    return -vmf1.entropy() - rel_entropy 
+    return vmf1.entropy() - rel_entropy 
